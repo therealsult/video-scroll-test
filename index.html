@@ -9,23 +9,34 @@
 </head>
 
 <body>
+    <h1>Test</h1>
     <div class="videocontainer">
-	    <video id="video" src="videos/video1.mp4"></video>    	
+<video id="v0" src="videos/video1.mp4"></video>
     </div>
 </body>
 
 </html>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script type="text/javascript">
-function scrollVideo() {
-    var video = $('#video').get(0),
-        videoLength = video.duration,
-        scrollPosition = $(document).scrollTop();
+var frameNumber = 0, // start video at frame 0
+    // lower numbers = faster playback
+    playbackConst = 500, 
+    // get page height from video duration
+    setHeight = document.getElementById("set-height"), 
+    // select video element         
+    vid = document.getElementById('v0'); 
 
-    video.currentTime = (scrollPosition / ($(document).height() - $(window).height())) * videoLength;
+// dynamically set the page height according to video length
+vid.addEventListener('loadedmetadata', function() {
+  setHeight.style.height = Math.floor(vid.duration) * playbackConst + "px";
+});
+
+// Use requestAnimationFrame for smooth playback
+function scrollPlay(){  
+  var frameNumber  = window.pageYOffset/playbackConst;
+  vid.currentTime  = frameNumber;
+  window.requestAnimationFrame(scrollPlay);
 }
 
-$(window).scroll(function(e) {
-    scrollVideo();
-});
-</script>
+window.requestAnimationFrame(scrollPlay);
+</script> 
